@@ -1,7 +1,10 @@
 package bot;
 
+import bot.strategy.TurnAngleStrategy;
 import dev.robocode.tankroyale.botapi.*;
 import dev.robocode.tankroyale.botapi.events.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 // ------------------------------------------------------------------
 // MyFirstBot
@@ -14,8 +17,12 @@ import dev.robocode.tankroyale.botapi.events.*;
 // ------------------------------------------------------------------
 public class MyFirstBot extends Bot {
 
+    private static final Logger logger = LogManager.getLogger(MyFirstBot.class);
+    private final TurnAngleStrategy turnAngleStrategy = new TurnAngleStrategy();
+
     // The main method starts our bot
     public static void main(String[] args) {
+        logger.info("Starting my bot.");
         new MyFirstBot().start();
     }
 
@@ -39,6 +46,7 @@ public class MyFirstBot extends Bot {
     // We saw another bot -> fire!
     @Override
     public void onScannedBot(ScannedBotEvent e) {
+        logger.debug("Firing at detected bot!");
         fire(1);
     }
 
@@ -47,8 +55,9 @@ public class MyFirstBot extends Bot {
     public void onHitByBullet(HitByBulletEvent e) {
         // Calculate the bearing to the direction of the bullet
         var bearing = calcBearing(e.getBullet().getDirection());
-
-        // Turn 90 degrees to the bullet direction based on the bearing
-        turnLeft(90 - bearing);
+        // Compute turn angle based on bearing
+        var turnAngle = turnAngleStrategy.computeFromBearing(bearing);
+        turnLeft(turnAngle);
     }
+
 }

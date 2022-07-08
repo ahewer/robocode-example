@@ -1,5 +1,5 @@
 {
-  "name": "My First Bot",
+  "name": "My Gradle Bot",
   "version": "1.0",
   "gameTypes": "melee, classic, 1v1",
   "authors": "Mathew Nelson, Flemming N. Larsen",
